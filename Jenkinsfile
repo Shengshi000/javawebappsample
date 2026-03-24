@@ -17,15 +17,28 @@ node {
     }
 
     stage('deploy') {
+    withEnv([
+        'AZURE_TENANT_ID=你的tenant-id',
+        'AZURE_SUBSCRIPTION_ID=你的subscription-id'
+    ]) {
         withCredentials([usernamePassword(
             credentialsId: 'AzureServicePrincipal',
-            usernameVariable: 'FTP_USER',
-            passwordVariable: 'FTP_PASS'
+            usernameVariable: 'AZURE_CLIENT_ID',
+            passwordVariable: 'AZURE_CLIENT_SECRET'
         )]) {
             sh '''
-            curl -T target/calculator-1.0.war \
-            ftp://waws-prod-ch1-075.ftp.azurewebsites.windows.net/site/wwwroot/webapps/ROOT.war \
-            -u "$FTP_USER:$FTP_PASS"
+                az login --service-principal \
+                  -u "$AZURE_CLIENT_ID" \
+                  -p "$AZURE_CLIENT_SECRET" \
+                  -t "$AZURE_TENANT_ID"
+
+                az account set --subscription "$AZURE_SUBSCRIPTION_ID"
+
+                az webapp deploy \
+                  --resource-group jenkins-get-started-rg \
+                  --name <你的webapp名字> \
+                  --src-path target/calculator-1.0.war \
+                  --type war
             '''
         }
     }
