@@ -18,7 +18,7 @@ node {
 
     stage('deploy') {
         withCredentials([usernamePassword(
-            credentialsId: 'AzurePublishProfile',
+            credentialsId: 'AzureServicePrincipal',
             usernameVariable: 'FTP_USER',
             passwordVariable: 'FTP_PASS'
         )]) {
