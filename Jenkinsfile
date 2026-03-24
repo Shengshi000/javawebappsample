@@ -10,7 +10,7 @@ node {
 
     stage('deploy') {
     withEnv([
-        'AZURE_TENANT_ID=0236eal1-0679-4072-9403-5c5ded97bd6f',
+        'AZURE_TENANT_ID=0236ea11-0679-4072-9403-5c5ded97bd6f',
         'AZURE_SUBSCRIPTION_ID=64f78ab2-3af3-4721-8682-eefd8821d34c'
     ]) {
         withCredentials([usernamePassword(
