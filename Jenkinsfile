@@ -19,15 +19,14 @@ node {
     }
   
     stage('deploy') {
-      def resourceGroup = 'jenkins-get-started-rg'
-      def webAppName = 'shengshi-java-jenkins'
-      // login Azure
-      withCredentials([usernamePassword(credentialsId: 'AzureServicePrincipal', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
-       sh '''
-          az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
-          az account set -s $AZURE_SUBSCRIPTION_ID
-        '''
-      }
+    withCredentials([usernamePassword(credentialsId: 'AzurePublishProfile', usernameVariable: 'FTP_USER', passwordVariable: 'FTP_PASS')]) {
+        sh """
+        curl -T target/calculator-1.0.war \
+        ftp://waws-prod-ch1-075.ftp.azurewebsites.windows.net/site/wwwroot/webapps/ROOT.war \
+        -u "$FTP_USER:$FTP_PASS"
+        """
+    }
+}
       // get publish settings
       def pubProfilesJson = sh script: "az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
       def ftpProfile = getFtpPublishProfile pubProfilesJson
