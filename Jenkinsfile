@@ -1,11 +1,3 @@
-import groovy.json.JsonSlurper
-
-def getFtpPublishProfile(def publishProfilesJson) {
-  def pubProfiles = new JsonSlurper().parseText(publishProfilesJson)
-  for (p in pubProfiles)
-    if (p['publishMethod'] == 'FTP')
-      return [url: p.publishUrl, username: p.userName, password: p.userPWD]
-}
 
 node {
     stage('init') {
@@ -18,8 +10,8 @@ node {
 
     stage('deploy') {
     withEnv([
-        'AZURE_TENANT_ID=你的tenant-id',
-        'AZURE_SUBSCRIPTION_ID=你的subscription-id'
+        'AZURE_TENANT_ID=0236eal1-0679-4072-9403-5c5ded97bd6f',
+        'AZURE_SUBSCRIPTION_ID=64f78ab2-3af3-4721-8682-eefd8821d34c'
     ]) {
         withCredentials([usernamePassword(
             credentialsId: 'AzureServicePrincipal',
@@ -36,7 +28,7 @@ node {
 
                 az webapp deploy \
                   --resource-group jenkins-get-started-rg \
-                  --name <你的webapp名字> \
+                  --name shengshi-java-Jenkins \
                   --src-path target/calculator-1.0.war \
                   --type war
             '''
