@@ -27,7 +27,7 @@ node {
 
                     az webapp deploy \
                       --resource-group jenkins-get-started-rg \
-                      --name shengshi-java-jenkins \
+                      --name shengshi-java-Jenkins \
                       --src-path target/calculator-1.0.war \
                       --type war
                 '''
